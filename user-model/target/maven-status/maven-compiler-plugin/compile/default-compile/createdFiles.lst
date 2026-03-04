@@ -1,0 +1,4 @@
+aston\dto\CreateUserRequestDto.class
+aston\model\User.class
+aston\dto\UpdateUserRequestDto.class
+aston\dto\UserResponseDto.class
