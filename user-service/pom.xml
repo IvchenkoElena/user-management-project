@@ -20,6 +20,11 @@
             <artifactId>user-model</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>aston</groupId>
+            <artifactId>user-events</artifactId>
+        </dependency>
+
         <!-- Spring Boot Starters -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
