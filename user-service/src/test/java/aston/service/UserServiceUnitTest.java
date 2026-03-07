@@ -41,6 +41,8 @@ class UserServiceUnitTest {
     private UserRepository userRepository;
     @Mock
     private UserMapper userMapper;
+    @Mock
+    private UserEventProducer producer;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -66,6 +68,8 @@ class UserServiceUnitTest {
             user.setId(1L);
             return user;
         });
+
+        doNothing().when(producer).sendUserCreated(any());
 
         UserResponseDto expectedResponse = new UserResponseDto();
         expectedResponse.setId(1L);
@@ -114,6 +118,8 @@ class UserServiceUnitTest {
             user.setId(1L);
             return user;
         });
+
+        doNothing().when(producer).sendUserCreated(any());
 
         UserResponseDto expectedResponse = new UserResponseDto();
         expectedResponse.setId(1L);
@@ -320,6 +326,7 @@ class UserServiceUnitTest {
     void shouldDeleteUserWhenExist() {
         when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
         doNothing().when(userRepository).deleteById(1L);
+        doNothing().when(producer).sendUserDeleted(any());
 
         userService.deleteUser(1L);
 

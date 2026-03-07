@@ -1,0 +1,26 @@
+server:
+  port: 0
+
+spring:
+  kafka:
+    bootstrap-servers: ${spring.embedded.kafka.brokers}
+    consumer:
+      group-id: notification-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        # Указываем доверенные пакеты для десериализации
+        spring.json.trusted.packages: "aston.dto,*"
+        # Задаём тип по умолчанию для десериализации значений
+        spring.json.value.default.type: aston.dto.UserEvent
+        # Опционально: указываем тип для ключей (если нужны объекты в ключах)
+        spring.json.key.default.type: java.lang.String
+        # Отключаем добавление заголовков с типом (если не нужно)
+        spring.json.add.type.headers: false
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        # Включаем добавление заголовков с информацией о типе
+        spring.json.add.type.headers: true

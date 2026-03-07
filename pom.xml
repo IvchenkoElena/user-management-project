@@ -22,6 +22,7 @@
         <module>console-client</module>
         <module>user-model</module>
         <module>user-events</module>
+        <module>notification-service</module>
     </modules>
 
     <properties>
@@ -39,6 +40,11 @@
             <dependency>
                 <groupId>aston</groupId>
                 <artifactId>user-model</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>aston</groupId>
+                <artifactId>user-events</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

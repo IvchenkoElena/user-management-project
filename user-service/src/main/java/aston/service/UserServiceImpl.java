@@ -23,6 +23,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository repository;
+    private final UserEventProducer userEventProducer;
 
     @Autowired
     private final UserMapper userMapper;
@@ -41,6 +42,7 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toEntity(requestDto);
         User savedUser = repository.save(user);
         log.info("Новый пользователь с ID = {} успешно создан", savedUser.getId());
+        userEventProducer.sendUserCreated(savedUser.getEmail());
         return userMapper.toDTO(savedUser);
     }
 
@@ -127,5 +129,6 @@ public class UserServiceImpl implements UserService {
         }
         repository.deleteById(id);
         log.info("Пользователь с ID {} удалён", id);
+        userEventProducer.sendUserDeleted(mayBeUser.get().getEmail());
     }
 }

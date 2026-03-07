@@ -2,7 +2,6 @@ package aston.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,7 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateUserRequestDto {
-    @NotBlank(message = "Имя не может быть пустым")
     private String name;
     @Email(message = "Некорректный формат email")
     private String email;
