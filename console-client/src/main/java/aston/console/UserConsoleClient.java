@@ -253,7 +253,6 @@ public class UserConsoleClient {
     private void deleteUser() {
         System.out.println("--Удаление пользователя по ID--");
         log.info("Начинаем удаление пользователя по ID");
-        System.out.println("Введите ID:");
         Long id = getValidUserIdFromInput();
         if (id == null) {
             return;
