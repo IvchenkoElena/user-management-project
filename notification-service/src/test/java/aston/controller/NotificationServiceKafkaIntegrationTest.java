@@ -2,6 +2,7 @@ package aston.controller;
 
 import aston.dto.UserEvent;
 import aston.service.EmailNotificationService;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,6 +21,7 @@ import static org.mockito.BDDMockito.willAnswer;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+@Slf4j
 @SpringBootTest(properties = "spring.profiles.active=test")
 @EmbeddedKafka(partitions = 1, topics = {"user-events"})
 class NotificationServiceKafkaIntegrationTest {
@@ -37,22 +39,21 @@ class NotificationServiceKafkaIntegrationTest {
         CountDownLatch latch = new CountDownLatch(1);
 
         willAnswer(invocation -> {
-            System.out.println("[Тест] mailSender.send() вызван!");
+            log.info("[Тест] mailSender.send() вызван!");
             latch.countDown();
             return null;
         }).given(mailSender).send(any(SimpleMailMessage.class));
 
-        System.out.println("[Тест] Отправляем сообщение в Kafka...");
+        log.info("[Тест] Отправляем сообщение в Kafka...");
         kafkaTemplate.send("user-events", event);
 
         boolean emailSent = latch.await(20, TimeUnit.SECONDS);
         if (!emailSent) {
-            System.err.println("ОШИБКА: Email не был отправлен в течение 20 секунд");
-            // Дополнительная диагностика
-            System.err.println("Проверьте логи выше — должно быть:");
-            System.err.println("1. [UserEventListener] Получено событие");
-            System.err.println("2. [EmailNotificationService] Отправка email");
-            System.err.println("3. [Тест] mailSender.send() вызван");
+            log.error("ОШИБКА: Email не был отправлен в течение 20 секунд");
+            log.warn("Проверьте логи выше — должно быть:");
+            log.warn("1. [UserEventListener] Получено событие");
+            log.warn("2. [EmailNotificationService] Отправка email");
+            log.warn("3. [Тест] mailSender.send() вызван");
         }
         assertTrue(emailSent, "Email не был отправлен в течение 20 секунд");
         verify(mailSender, times(1)).send(any(SimpleMailMessage.class));

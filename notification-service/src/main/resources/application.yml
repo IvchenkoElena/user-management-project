@@ -11,7 +11,6 @@ spring:
     properties:
       mail.smtp.auth: false
       mail.smtp.starttls.enable: false
-
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     consumer:
@@ -32,3 +31,14 @@ spring:
     listener:
       ack-mode: manual
       poll-timeout: 30000
+      error-handler-back-off:
+        initial-interval: 0
+        max-attempts: 3
+
+app:
+  website:
+    url: your-website.com
+
+logging:
+  level:
+    aston.service: INFO
