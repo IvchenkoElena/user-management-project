@@ -1,16 +1,18 @@
 package aston.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class EmailNotificationService {
 
     private final JavaMailSender mailSender;
 
-    @Value("${app.website.url:your-website.com}")
+    @Value("${app.website.url}")
     private String websiteUrl;
 
     public EmailNotificationService(JavaMailSender mailSender) {
@@ -18,7 +20,7 @@ public class EmailNotificationService {
     }
 
     public void sendNotification(String email, String operation) {
-        System.out.println("[EmailNotificationService] Отправка email для: " + email + ", операция: " + operation);
+        log.info("[EmailNotificationService] Отправка email для: {}, операция: {}", email, operation);
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
@@ -42,8 +44,8 @@ public class EmailNotificationService {
             ));
         }
 
-        System.out.println("[EmailNotificationService] Отправляем сообщение через mailSender");
+        log.info("[EmailNotificationService] Отправляем сообщение через mailSender");
         mailSender.send(message);
-        System.out.println("[EmailNotificationService] Сообщение отправлено");
+        log.info("[EmailNotificationService] Сообщение отправлено");
     }
 }
