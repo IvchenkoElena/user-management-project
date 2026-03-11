@@ -53,8 +53,10 @@ public class UserServiceImpl implements UserService {
         if (requestDto.getEmail() == null || !requestDto.getEmail().contains("@")) {
             throw new IllegalArgumentException("Invalid email format");
         }
-        if (requestDto.getAge() < 0 || requestDto.getAge() > 120) {
-            throw new IllegalArgumentException("Age must be between 0 and 120");
+        if (requestDto.getAge() != null) {
+            if (requestDto.getAge() < 0 || requestDto.getAge() > 120) {
+                throw new IllegalArgumentException("Age must be between 0 and 120");
+            }
         }
     }
 
@@ -113,6 +115,10 @@ public class UserServiceImpl implements UserService {
         }
         User user = mayBeUser.get();
         log.info("Старые данные пользователя: " + user);
+        if (requestDto.getEmail() != null
+                && !requestDto.getEmail().equalsIgnoreCase(user.getEmail())) {
+            validateUniqueEmail(requestDto.getEmail());
+        }
         userMapper.updateEntityFromRequest(requestDto, user);
         User updatedUser = repository.save(user);
         System.out.println("Новые данные пользователя: " + updatedUser);

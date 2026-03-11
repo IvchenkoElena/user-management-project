@@ -14,6 +14,8 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface UserMapper {
 
     UserResponseDto toDTO(User user);
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     User toEntity(CreateUserRequestDto request);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

@@ -76,7 +76,6 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleUserNotFound(UserNotFoundException ex) {
         Map<String, String> response = new HashMap<>();
@@ -86,4 +85,15 @@ public class UserController {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(response);
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, String>> handleIllegalArgument(IllegalArgumentException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response);
+    }
 }
+
