@@ -274,6 +274,7 @@ public class UserConsoleClient {
             handleUserFriendlyError(e);
         }
     }
+
     private Long getValidUserIdFromInput() {
         System.out.println("Введите ID:");
         String input = scanner.nextLine().trim();
