@@ -4,6 +4,7 @@ import aston.dto.CreateUserRequestDto;
 import aston.dto.UpdateUserRequestDto;
 import aston.model.User;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +25,13 @@ import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 @Component
 public class UserConsoleClient {
     private final RestTemplate restTemplate;
-    private final String baseUrl = "http://localhost:8080/api/users";
+    private final String baseUrl;
     private final Scanner scanner = new Scanner(System.in);
-    private  boolean running = true;
+    private boolean running = true;
 
-    public UserConsoleClient(RestTemplate restTemplate) {
+    public UserConsoleClient(RestTemplate restTemplate, @Value("${app.user-service.base-url}") String baseUrl) {
         this.restTemplate = restTemplate;
+        this.baseUrl = baseUrl;
     }
 
     public void run() {
@@ -101,7 +103,7 @@ public class UserConsoleClient {
             int age = Integer.parseInt(scanner.nextLine());
             CreateUserRequestDto requestDto = new CreateUserRequestDto(name, email, age);
 
-            ResponseEntity<User> response = restTemplate.postForEntity(baseUrl,requestDto, User.class);
+            ResponseEntity<User> response = restTemplate.postForEntity(baseUrl, requestDto, User.class);
             User user = response.getBody();
             System.out.println("Новый пользователь с ID = " + user.getId() + " успешно создан");
             log.info("Пользователь успешно создан: ID={}", user.getId());
@@ -221,7 +223,8 @@ public class UserConsoleClient {
             System.out.println("Введите возраст. Оставьте пустым, чтобы оставить без изменений");
             String ageInput = scanner.nextLine().trim();
             if (!ageInput.isEmpty()) {
-                try {requestDto.setAge(Integer.parseInt(ageInput));
+                try {
+                    requestDto.setAge(Integer.parseInt(ageInput));
                 } catch (NumberFormatException e) {
                     System.out.println("Некорректный формат возраста. Должен быть числом.");
                     log.error("Ошибка преобразования возраста в число", e);
@@ -229,7 +232,7 @@ public class UserConsoleClient {
                 }
             }
 
-            if(requestDto.isNameSet() || requestDto.isEmailSet() || requestDto.isAgeSet()) {
+            if (requestDto.isNameSet() || requestDto.isEmailSet() || requestDto.isAgeSet()) {
                 try {
                     restTemplate.put(baseUrl + "/" + id, requestDto);
                     System.out.println("Пользователь с ID = " + id + " успешно обновлен");
@@ -323,7 +326,7 @@ public class UserConsoleClient {
         } else if (e instanceof HttpServerErrorException) {
             message = "Ошибка сервера (5xx). Сервис временно недоступен.";
         } else if (e.getMessage() != null && e.getMessage().contains("Connection refused")) {
-            message = "Ошибка: не удаётся подключиться к серверу. Проверьте, запущен ли user-service на порту 8080.";
+            message = "Ошибка: не удаётся подключиться к серверу. Проверьте, запущен ли user-service на порту 8085.";
         } else {
             message = "Произошла непредвиденная ошибка: " + e.getMessage() +
                     ". Подробности записаны в лог.";
