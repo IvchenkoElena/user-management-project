@@ -113,6 +113,7 @@ public class UserServiceImpl implements UserService {
             log.warn("Пользователь с ID {} не найден", id);
             throw new UserNotFoundException("Пользователь с ID " + id + " не найден");
         }
+        validateUpdateRequestData(requestDto);
         User user = mayBeUser.get();
         log.info("Старые данные пользователя: " + user);
         if (requestDto.getEmail() != null
@@ -124,6 +125,24 @@ public class UserServiceImpl implements UserService {
         System.out.println("Новые данные пользователя: " + updatedUser);
         log.info("Пользователь с ID = {} успешно обновлен", id);
         return userMapper.toDTO(updatedUser);
+    }
+
+    private void validateUpdateRequestData(UpdateUserRequestDto requestDto) {
+        if (requestDto == null) {
+            throw new IllegalArgumentException("Нет данных для обновления");
+        }
+        if (!requestDto.isNameSet() && !requestDto.isEmailSet() && !requestDto.isAgeSet()) {
+            throw new IllegalArgumentException("Нет данных для обновления");
+        }
+        if (requestDto.getName() != null && requestDto.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Имя не может быть пустым");
+        }
+        if (requestDto.getEmail() != null && !requestDto.getEmail().contains("@")) {
+            throw new IllegalArgumentException("Некорректный формат email");
+        }
+        if (requestDto.getAge() != null && (requestDto.getAge() < 0 || requestDto.getAge() > 120)) {
+            throw new IllegalArgumentException("Возраст должен быть от 0 до 120");
+        }
     }
 
     @Override
