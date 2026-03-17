@@ -37,4 +37,3 @@ resilience4j:
         permittedNumberOfCallsInHalfOpenState: 3
         waitDurationInOpenState: 10s
         failureRateThreshold: 50
-          - Path=/api/notifications/**
