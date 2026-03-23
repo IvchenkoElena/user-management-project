@@ -69,14 +69,12 @@ docker compose down
 
 ## Swagger (OpenAPI)
 
-Если сервис поднят, Swagger UI доступен по адресам:
+Если сервис поднят, Swagger UI доступен по адресу:
 
-- User Service: `http://localhost:8080/swagger-ui.html`
 - Notification Service: `http://localhost:8082/swagger-ui.html`
 
 Если используется Gateway, Swagger также доступен через него:
 
-- User Service: `http://localhost:8085/swagger/user/swagger-ui.html`
 - Notification Service: `http://localhost:8085/swagger/notification/swagger-ui.html`
 
 ## Полезные команды
