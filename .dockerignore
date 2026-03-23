@@ -1,0 +1,8 @@
+**/target/
+.git/
+.idea/
+*.iml
+*.ipr
+*.iws
+Docker-compose.yml
+docker-compose.yml
