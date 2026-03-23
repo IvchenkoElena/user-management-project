@@ -23,6 +23,18 @@ spring:
               args:
                 name: notificationServiceCircuitBreaker
                 fallbackUri: forward:/fallback/notification-service
+        - id: user-service-swagger
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/swagger/user/**
+          filters:
+            - RewritePath=/swagger/user/(?<segment>.*), /${segment}
+        - id: notification-service-swagger
+          uri: lb://NOTIFICATION-SERVICE
+          predicates:
+            - Path=/swagger/notification/**
+          filters:
+            - RewritePath=/swagger/notification/(?<segment>.*), /${segment}
 
 resilience4j:
   circuitbreaker:
